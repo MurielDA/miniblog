@@ -13,7 +13,7 @@ const app = express();
 app.use(helmet());
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-frontend-domain.vercel.app']  // 部署后更新
+    ? ['https://miniblog-pied.vercel.app/']  // 部署后更新
     : 'http://localhost:5173',
   credentials: true,
 }));
