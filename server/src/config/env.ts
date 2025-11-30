@@ -22,4 +22,10 @@ const parseEnv = () => {
     }
 };
 
-export const env = parseEnv();
+export const env: {
+  NODE_ENV: string;
+  PORT: string;
+  MONGODB_URI: string;
+  JWT_SECRET: string;
+  JWT_EXPIRES_IN: string;
+} = parseEnv();

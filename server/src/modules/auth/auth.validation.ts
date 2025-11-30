@@ -19,3 +19,9 @@ export const loginSchema = z.object({
         password: z.string().min(1, "Password is required"),
     })
 });
+
+export const getUserInfoByIdSchema = z.object({
+    params:z.object({
+        userId: z.string().length(24, "Invalid user ID")
+    })
+})

@@ -1,11 +1,9 @@
-import { AuthService } from "./auth.service";
+import { authService } from "./auth.service";
 import { Request, Response, NextFunction } from "express";
-import { ApiResponse } from "../../types/index";
+import { ApiResponse, AuthRequest } from "@/types/index";
 
-const authService = new AuthService();
-
-export class AuthController {
-    async register(req: Request, res: Response, next: NextFunction) {
+class AuthController {
+    async register(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const result = await authService.register(req.body);
 
@@ -20,7 +18,7 @@ export class AuthController {
         }
     };
 
-    async login(req: Request, res: Response, next: NextFunction) {
+    async login(req: AuthRequest, res: Response, next: NextFunction) {
         try{
             const result = await authService.login(req.body);
             const response: ApiResponse = {
@@ -33,4 +31,36 @@ export class AuthController {
             next(error);
         }
     };
+
+    async getMyProfile(req: AuthRequest, res: Response, next: NextFunction) {
+        try{
+            const userId = req.user?.userId ?? "";
+            const result = await authService.getUserById(userId);
+            const response: ApiResponse = {
+                success: true,
+                message: "User profile fetched successfully",
+                data: result
+            };
+            res.status(200).json(response);
+        }catch(error){
+            next(error);
+        }
+    };
+
+    async getProfileById(req: AuthRequest, res: Response, next: NextFunction){
+        try{
+            const userId = req.params.userId;
+            const result = await authService.getUserById(userId);
+            const response: ApiResponse = {
+                success: true,
+                message: "User profile fetched successfully",
+                data: result
+            };
+            res.status(200).json(response);
+        }catch(error){
+            next(error);
+        }
+    }
 };
+
+export const authController = new AuthController();

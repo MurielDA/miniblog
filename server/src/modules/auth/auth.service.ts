@@ -2,6 +2,7 @@ import { User } from "@/models/user.model";
 import { AppError } from "@/types";
 import { hashPassword, comparePassword } from "@/utils/password";
 import { generateToken } from "@/utils/jwt";
+import mongoose from 'mongoose';
 
 
 interface RegisterData {
@@ -15,7 +16,7 @@ interface LoginData {
     password: string;
 }
 
-export class AuthService {
+class AuthService {
 
     // create user
     async register(data: RegisterData) {
@@ -81,4 +82,27 @@ export class AuthService {
             }
         };
     }
+
+    // get user by id
+    async getUserById(userId: string) {
+        if(!mongoose.Types.ObjectId.isValid(userId)){
+            throw new AppError(400, "Invalid user ID");
+        }
+        const user = await User.findById(userId);
+        if(!user){
+            throw new AppError(404, "User not found");
+        }
+
+        return {
+            user:{
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                bio: user.bio,
+                avatarUrl: user.avatarUrl,
+            }
+        }
+    }
 }
+
+export const authService = new AuthService();

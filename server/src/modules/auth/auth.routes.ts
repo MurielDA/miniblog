@@ -1,12 +1,15 @@
 import { Router } from 'express';
-import { AuthController } from './auth.controller';
+import { authController } from './auth.controller';
 import { validate } from '@/middleware/validate.middleware';
-import { registerSchema, loginSchema } from './atuth.validation';
+import { registerSchema, loginSchema, getUserInfoByIdSchema } from './auth.validation';
+import { authenticate } from '@/middleware/auth.middleware';
 
 const authRouter = Router();
-const authController = new AuthController();
 
 authRouter.post("/register", validate(registerSchema), authController.register);
 authRouter.post("/login", validate(loginSchema), authController.login);
+
+authRouter.get("/me", authenticate, authController.getMyProfile);
+authRouter.get("/:userId", validate(getUserInfoByIdSchema), authController.getProfileById);
 
 export default authRouter;
